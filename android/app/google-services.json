@@ -1,0 +1,69 @@
+{
+  "project_info": {
+    "project_number": "984156342486",
+    "firebase_url": "https://smart-hotel-b4585-default-rtdb.firebaseio.com",
+    "project_id": "smart-hotel-b4585",
+    "storage_bucket": "smart-hotel-b4585.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:984156342486:android:99951981d579bdf81de177",
+        "android_client_info": {
+          "package_name": "com.example.hotel"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "984156342486-ftroejsg0e9qcl8o79h3jtulebmnu8p5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDwBsjAM9KU959953-fsITiihhBe2PThZc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "984156342486-ftroejsg0e9qcl8o79h3jtulebmnu8p5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:984156342486:android:b6e924f745c713f51de177",
+        "android_client_info": {
+          "package_name": "com.example.hotelmain"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "984156342486-ftroejsg0e9qcl8o79h3jtulebmnu8p5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDwBsjAM9KU959953-fsITiihhBe2PThZc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "984156342486-ftroejsg0e9qcl8o79h3jtulebmnu8p5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
