@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hotel/components/bottomNavbarconfig.dart';
 import 'package:hotel/components/drawerConfig.dart';
+import 'package:hotel/pages/selectAppliance.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -23,7 +24,14 @@ class _HomePageState extends State<HomePage> {
         title: Text("Book Room"),
         centerTitle: true,
         actions: [
-          IconButton(icon: Icon(CupertinoIcons.bell), onPressed: () {})
+          IconButton(
+              icon: Icon(CupertinoIcons.bell),
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    CupertinoPageRoute(
+                        builder: (context) => SelectAppliance()));
+              })
         ],
       ),
       body: SingleChildScrollView(
@@ -96,7 +104,7 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             SizedBox(
-              height: 70.0,
+              height: 40.0,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,

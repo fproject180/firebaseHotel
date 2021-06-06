@@ -53,10 +53,11 @@ class _billingPageState extends State<billingPage> {
   }
 
   handlerPaymentSuccess() {
-    print(
-      "Payment Successful",
-    );
-    Toast.show("Payment Successful ✔", context, backgroundColor: Colors.green);
+    // print(
+    //   "I am Smart",
+    // );
+    // Toast.show("Payment Successful ✔", context, backgroundColor: Colors.green);
+    return HomePage();
     Navigator.push(
         context, CupertinoPageRoute(builder: (context) => HomePage()));
     paymentDone = true;
