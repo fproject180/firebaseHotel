@@ -92,22 +92,30 @@ class _HomePageState extends State<HomePage> {
                   Container(
                     child: Center(
                       child: AnimatedTextKit(animatedTexts: [
-                        TypewriterAnimatedText("Welcome",
+                        TypewriterAnimatedText("Welcome!",
                             textStyle: TextStyle(
-                                fontSize: 25.0,
+                                fontSize: 35.0,
+                                color: Colors.white,
+                                fontWeight: FontWeight.normal,
+                                fontFamily: "pacifico"),
+                            speed: Duration(milliseconds: 500)),
+                        TypewriterAnimatedText("नमस्ते!",
+                            textStyle: TextStyle(
+                                fontSize: 35.0,
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold),
                             speed: Duration(milliseconds: 500)),
-                        TypewriterAnimatedText("To the",
+                        TypewriterAnimatedText("ようこそ!",
                             textStyle: TextStyle(
-                                fontSize: 25.0,
+                                fontSize: 35.0,
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold),
                             speed: Duration(milliseconds: 500)),
-                        TypewriterAnimatedText("New Way to Book Rooms",
+                        TypewriterAnimatedText("Welcome!",
                             textStyle: TextStyle(
-                                fontSize: 25.0,
+                                fontSize: 45.0,
                                 color: Colors.white,
+                                fontFamily: "pacifico",
                                 fontWeight: FontWeight.bold),
                             speed: Duration(milliseconds: 500)),
                       ]),
@@ -218,7 +226,7 @@ class _HomePageState extends State<HomePage> {
                               height: 10.0,
                             ),
                             Text(
-                              "Select",
+                              "Control",
                               style: TextStyle(
                                   fontSize: 18.0,
                                   color: Colors.blue[800],
