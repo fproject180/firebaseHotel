@@ -7,15 +7,29 @@ import 'package:hotel/services/authService.dart';
 import 'package:toast/toast.dart';
 import 'package:provider/provider.dart';
 
-void getCurrentUser() {
-  final FirebaseAuth auth = FirebaseAuth.instance;
-
-  final User user = auth.currentUser;
-  final uid = user.uid;
+class DrawerConfig extends StatefulWidget {
+  @override
+  _DrawerConfigState createState() => _DrawerConfigState();
 }
 
-class DrawerConfig extends StatelessWidget {
-  final FirebaseAuth auth = FirebaseAuth.instance;
+class _DrawerConfigState extends State<DrawerConfig> {
+  var userId;
+  var emailId;
+
+  @override
+  void initState() {
+    final FirebaseAuth auth = FirebaseAuth.instance;
+
+    final User user = auth.currentUser;
+    final uid = user.uid;
+    final email = user.email;
+    print(uid);
+    setState(() {
+      userId = uid;
+      emailId = email;
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,16 +60,12 @@ class DrawerConfig extends StatelessWidget {
                             image: AssetImage("assets/avatar.png"))),
                   ),
                   Text(
-                    "",
+                    "$emailId",
                     style: TextStyle(
                         fontSize: 30.0,
                         color: Colors.white,
                         fontWeight: FontWeight.bold),
                   ),
-                  Text(
-                    "kbelgi1@gmail.com",
-                    style: TextStyle(color: Colors.white),
-                  )
                 ],
               ),
             ),
@@ -69,6 +79,7 @@ class DrawerConfig extends StatelessWidget {
               Icons.settings,
               color: CupertinoColors.darkBackgroundGray,
             ),
+            onTap: () {},
           ),
           ListTile(
               title: Text(
