@@ -36,6 +36,9 @@ dependencies:
   animated_text_kit: ^4.2.1
   convex_bottom_bar: ^3.0.0
   random_color: ^1.0.5
+  firebase_database: ^7.1.0
+  intl: ^0.17.0
+  syncfusion_flutter_datepicker: ^19.1.66-beta
 
 dev_dependencies:
   flutter_test:
