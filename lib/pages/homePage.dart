@@ -1,11 +1,11 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hotel/components/bottomNavbarconfig.dart';
 import 'package:hotel/components/drawerConfig.dart';
 import 'package:hotel/pages/selectAppliance.dart';
-
 import 'package:hotel/pages/toggleAppliances.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
@@ -21,8 +21,9 @@ class _HomePageState extends State<HomePage> {
   var roomType;
   var _range;
   var selectedAppliances;
-
   var hotelID;
+  var userID;
+
   var selectedDate = DateTime.now();
   List roomTypeList = [];
   List appliancesList = [];
@@ -49,6 +50,17 @@ class _HomePageState extends State<HomePage> {
         appliancesList = value.get("HotelRoomAppliance");
       });
     });
+  }
+
+  @override
+  void initState() {
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final User user = auth.currentUser;
+    final uid = user.uid;
+    setState(() {
+      userID = uid;
+    });
+    super.initState();
   }
 
   @override
@@ -477,6 +489,8 @@ class _HomePageState extends State<HomePage> {
                   var id = FirebaseFirestore.instance
                       .collection('HotelTransaction')
                       .add({
+                    "UserID": userID,
+                    "HotelID": hotelID,
                     'HotelName': hotelName,
                     'RoomType': roomType,
                     "StayDate": selectedDate,
