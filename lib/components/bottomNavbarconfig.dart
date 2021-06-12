@@ -17,8 +17,8 @@ class _BottomNavConfigState extends State<BottomNavConfig> {
       backgroundColor: Colors.purple[400],
       items: [
         TabItem(icon: Icons.home, title: 'Home'),
-        TabItem(icon: Icons.room_service_outlined, title: 'Services'),
-        TabItem(icon: Icons.explore_outlined, title: 'Navigate'),
+        TabItem(icon: Icons.list, title: 'List'),
+        TabItem(icon: Icons.add, title: 'Add'),
         TabItem(icon: Icons.star_rate_outlined, title: 'Rate Us'),
         TabItem(icon: Icons.payments_outlined, title: 'Payment'),
       ],
