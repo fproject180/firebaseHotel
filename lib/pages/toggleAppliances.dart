@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -10,6 +12,64 @@ class ToggleAppliances extends StatefulWidget {
 
 class _ToggleAppliancesState extends State<ToggleAppliances> {
   final databaseReference = FirebaseDatabase.instance.reference();
+  String documentId =
+      FirebaseFirestore.instance.collection("HotelTransaction").id;
+  var userId;
+
+  jaishreeram() {
+    FirebaseFirestore.instance
+        .collection("HotelTransaction")
+        .doc(documentId)
+        .get()
+        .then((value) {
+      return StreamBuilder(
+          stream: FirebaseFirestore.instance
+              .collection("HotelTransaction")
+              .snapshots(),
+          builder:
+              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            if (!snapshot.hasData) {
+              return CircularProgressIndicator();
+            }
+
+            return ListView(
+              children: snapshot.data.docs.map((e) {
+                return ListTile(
+                  trailing: CupertinoSlidingSegmentedControl(
+                      children: lightsToggle,
+                      groupValue: lightsControl,
+                      onValueChanged: (value) {
+                        if (e["Appliances"] == "Light") {
+                          setState(() {
+                            lightsControl = value;
+                          });
+                          if (lightsControl == 1) {
+                            databaseReference.update({"LED_STATUS": 1});
+                          }
+                        }
+                      }),
+                  title: Text(
+                    e["Appliances"],
+                    style: TextStyle(fontSize: 30.0),
+                  ),
+                );
+              }).toList(),
+            );
+          });
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    FirebaseAuth auth = FirebaseAuth.instance;
+    User user = auth.currentUser;
+    var userID = user.uid;
+    setState(() {
+      userId = userID;
+    });
+  }
 
   var fan;
   var lights;
@@ -76,263 +136,12 @@ class _ToggleAppliancesState extends State<ToggleAppliances> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        title: Text("Toggle appliances"),
         elevation: 0.0,
         bottomOpacity: 0.0,
         backgroundColor: Colors.purple[400],
       ),
-      body: Column(
-        children: [
-          Container(
-            height: 150.0,
-            width: double.infinity,
-            decoration: BoxDecoration(
-                color: Colors.purple[400],
-                borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(50.0),
-                    bottomRight: Radius.circular(50.0))),
-            child: Align(
-                alignment: Alignment.center,
-                child: Text(
-                  "Toggle Appliances",
-                  style: TextStyle(
-                      fontSize: 30.0,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white),
-                )),
-          ),
-          SizedBox(
-            height: 30.0,
-          ),
-          Container(
-            child: Card(
-              child: ListTile(
-                  leading: fanControl == 1
-                      ? Icon(
-                          Icons.air,
-                          color: Colors.blue,
-                          size: 30.0,
-                        )
-                      : Icon(
-                          Icons.air,
-                          size: 30.0,
-                        ),
-                  title: Text("Fan"),
-                  trailing: CupertinoSlidingSegmentedControl(
-                      backgroundColor: fanControl == 0
-                          ? CupertinoColors.destructiveRed
-                          : CupertinoColors.systemGreen,
-                      children: fanToggle,
-                      groupValue: fanControl,
-                      onValueChanged: (value) {
-                        setState(() {
-                          fanControl = value;
-                        });
-                      })),
-            ),
-          ),
-          Container(
-            child: Card(
-              child: ListTile(
-                  leading: lightsControl == 1
-                      ? Icon(
-                          Icons.emoji_objects_rounded,
-                          color: Colors.yellow[800],
-                          size: 30.0,
-                        )
-                      : Icon(
-                          Icons.emoji_objects_outlined,
-                          size: 30.0,
-                        ),
-                  title: Text("Lights"),
-                  trailing: CupertinoSlidingSegmentedControl(
-                      backgroundColor: lightsControl == 0
-                          ? CupertinoColors.destructiveRed
-                          : CupertinoColors.systemGreen,
-                      children: lightsToggle,
-                      groupValue: lightsControl,
-                      onValueChanged: (value) {
-                        setState(() {
-                          lightsControl = value;
-                        });
-                      })),
-            ),
-          ),
-          Container(
-            child: Card(
-              child: ListTile(
-                  leading: tvControl == 1
-                      ? Icon(
-                          Icons.live_tv_rounded,
-                          color: Colors.green[800],
-                          size: 30.0,
-                        )
-                      : Icon(
-                          Icons.tv,
-                          size: 30.0,
-                        ),
-                  title: Text("Television"),
-                  trailing: CupertinoSlidingSegmentedControl(
-                      backgroundColor: tvControl == 0
-                          ? CupertinoColors.destructiveRed
-                          : CupertinoColors.systemGreen,
-                      children: tvToggle,
-                      groupValue: tvControl,
-                      onValueChanged: (value) {
-                        setState(() {
-                          tvControl = value;
-                        });
-                      })),
-            ),
-          ),
-          Container(
-            child: Card(
-              child: ListTile(
-                  leading: acControl == 1
-                      ? Icon(
-                          Icons.ac_unit_rounded,
-                          color: Colors.blue[800],
-                          size: 30.0,
-                        )
-                      : Icon(
-                          Icons.ac_unit_rounded,
-                          size: 30.0,
-                        ),
-                  title: Text("AC"),
-                  trailing: CupertinoSlidingSegmentedControl(
-                      backgroundColor: acControl == 0
-                          ? CupertinoColors.destructiveRed
-                          : CupertinoColors.systemGreen,
-                      children: acToggle,
-                      groupValue: acControl,
-                      onValueChanged: (value) {
-                        setState(() {
-                          acControl = value;
-                        });
-                      })),
-            ),
-          ),
-          Container(
-            child: Card(
-              child: ListTile(
-                  leading: coffeeMakerControl == 1
-                      ? Icon(
-                          Icons.coffee_maker_rounded,
-                          color: Colors.brown[800],
-                          size: 30.0,
-                        )
-                      : Icon(
-                          Icons.coffee_maker_outlined,
-                          size: 30.0,
-                        ),
-                  title: Text("Coffee Maker"),
-                  trailing: CupertinoSlidingSegmentedControl(
-                      backgroundColor: coffeeMakerControl == 0
-                          ? CupertinoColors.destructiveRed
-                          : CupertinoColors.systemGreen,
-                      children: coffeeMakerToggle,
-                      groupValue: coffeeMakerControl,
-                      onValueChanged: (value) {
-                        setState(() {
-                          coffeeMakerControl = value;
-                        });
-                      })),
-            ),
-          ),
-          Container(
-            child: Card(
-              child: ListTile(
-                  leading: powerSocketControl2 == 1
-                      ? Icon(
-                          Icons.electrical_services_rounded,
-                          color: Colors.blue[800],
-                          size: 30.0,
-                        )
-                      : Icon(
-                          Icons.electrical_services_rounded,
-                          size: 30.0,
-                        ),
-                  title: Text("Power Socket"),
-                  trailing: CupertinoSlidingSegmentedControl(
-                      backgroundColor: powerSocketControl2 == 0
-                          ? CupertinoColors.destructiveRed
-                          : CupertinoColors.systemGreen,
-                      children: powerSocketToggle2,
-                      groupValue: powerSocketControl2,
-                      onValueChanged: (value) {
-                        setState(() {
-                          powerSocketControl2 = value;
-                        });
-                      })),
-            ),
-          ),
-          Container(
-            child: Card(
-              child: ListTile(
-                  leading: powerSocketControl1 == 1
-                      ? Icon(
-                          Icons.outlet_rounded,
-                          color: Colors.blue[800],
-                          size: 30.0,
-                        )
-                      : Icon(
-                          Icons.outlet_outlined,
-                          size: 30.0,
-                        ),
-                  title: Text("Power Socket"),
-                  trailing: CupertinoSlidingSegmentedControl(
-                      backgroundColor: powerSocketControl1 == 0
-                          ? CupertinoColors.destructiveRed
-                          : CupertinoColors.systemGreen,
-                      children: powerSocketToggle1,
-                      groupValue: powerSocketControl1,
-                      onValueChanged: (value) {
-                        setState(() {
-                          powerSocketControl1 = value;
-                        });
-                      })),
-            ),
-          ),
-          Container(
-            child: Card(
-              child: ListTile(
-                  leading: nightLampControl == 1
-                      ? Icon(
-                          Icons.flourescent_rounded,
-                          size: 30.0,
-                          color: Colors.lightGreenAccent[400],
-                        )
-                      : Icon(
-                          Icons.flourescent_outlined,
-                          size: 30.0,
-                        ),
-                  title: Text("Night Lamp"),
-                  trailing: CupertinoSlidingSegmentedControl(
-                      backgroundColor: nightLampControl == 0
-                          ? CupertinoColors.destructiveRed
-                          : CupertinoColors.systemGreen,
-                      children: nightLampToggle,
-                      groupValue: nightLampControl,
-                      onValueChanged: (value) {
-                        setState(() {
-                          nightLampControl = value;
-                        });
-                        if (nightLampControl == 1) {
-                          setState(() {
-                            nightLamp = DateTime.now();
-                            nightLampTime = dateFormat.format(nightLamp);
-                          });
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            content: Text(nightLampTime),
-                            behavior: SnackBarBehavior.floating,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30.0)),
-                          ));
-                        }
-                      })),
-            ),
-          ),
-        ],
-      ),
+      body: jaishreeram(),
     );
   }
 }

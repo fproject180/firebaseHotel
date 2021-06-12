@@ -5,7 +5,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hotel/components/bottomNavbarconfig.dart';
 import 'package:hotel/components/drawerConfig.dart';
-import 'package:hotel/pages/selectAppliance.dart';
 import 'package:hotel/pages/toggleAppliances.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
@@ -22,11 +21,21 @@ class _HomePageState extends State<HomePage> {
   var _range;
   var selectedAppliances;
   var hotelID;
-  var userID;
+  String userID;
 
   var selectedDate = DateTime.now();
   List roomTypeList = [];
   List appliancesList = [];
+
+  getUserInfo() {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    User user = auth.currentUser;
+    final uid = user.uid;
+    print(uid);
+    setState(() {
+      userID = uid;
+    });
+  }
 
   getRoomList() {
     FirebaseFirestore.instance
@@ -50,6 +59,13 @@ class _HomePageState extends State<HomePage> {
         appliancesList = value.get("HotelRoomAppliance");
       });
     });
+  }
+
+  @override
+  void initState() {
+    getUserInfo();
+
+    super.initState();
   }
 
   @override
@@ -271,27 +287,36 @@ class _HomePageState extends State<HomePage> {
                   child: InkWell(
                     onTap: () {
                       getApplianceList();
-                      print(appliancesList);
-                      showCupertinoModalPopup(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return CupertinoActionSheet(
-                                title: Text("Select Appliances"),
-                                cancelButton: CupertinoButton(
-                                    child: Text("Cancel"),
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                    }),
-                                actions: appliancesList.map((e) {
-                                  return CupertinoActionSheetAction(
-                                      onPressed: () {
-                                        setState(() {
-                                          selectedAppliances = e;
-                                        });
-                                        Navigator.pop(context);
-                                      },
-                                      child: Text(e));
-                                }).toList());
+                      // showModal(
+                      //     context: context,
+                      //     builder: (BuildContext context) {
+                      //       return ListView(
+                      //         children: appliancesList.map((e) {
+                      //           return CheckboxListTile(
+                      //             title: Text(e),
+                      //             onChanged: (value) {},
+                      //           );
+                      //         }).toList(),
+                      //       );
+
+                            // return StreamBuilder(
+                            //     stream: FirebaseFirestore.instance
+                            //         .collection("HotelInfo")
+                            //         .snapshots(),
+                            //     builder: (BuildContext context,
+                            //         AsyncSnapshot<QuerySnapshot> snapshot) {
+                            //       if (!snapshot.hasData) {
+                            //         return CircularProgressIndicator();
+                            //       }
+                            //       return AlertDialog(
+                            //           content: ListView(
+                            //         children: snapshot.data.docs.map((e) {
+                            //           return CheckboxListTile(
+                            //               title: Text(e["HotelRoomAppliance"]),
+                            //               onChanged: (value) {});
+                            //         }).toList(),
+                            //       ));
+                            //     });
                           });
                     },
                     child: Card(
@@ -354,9 +379,6 @@ class _HomePageState extends State<HomePage> {
                   child: InkWell(
                     onTap: () {
                       getRoomList();
-
-                      print(roomTypeList);
-
                       showCupertinoModalPopup(
                           context: context,
                           builder: (BuildContext context) {
