@@ -22,11 +22,21 @@ class _HomePageState extends State<HomePage> {
   var _range;
   var selectedAppliances;
   var hotelID;
-  var userID;
+  String userID;
 
   var selectedDate = DateTime.now();
   List roomTypeList = [];
   List appliancesList = [];
+
+  getUserInfo() {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    User user = auth.currentUser;
+    final uid = user.uid;
+    print(uid);
+    setState(() {
+      userID = uid;
+    });
+  }
 
   getRoomList() {
     FirebaseFirestore.instance
@@ -54,12 +64,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
-    final FirebaseAuth auth = FirebaseAuth.instance;
-    final User user = auth.currentUser;
-    final uid = user.uid;
-    setState(() {
-      userID = uid;
-    });
+    getUserInfo();
     super.initState();
   }
 
