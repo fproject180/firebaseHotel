@@ -1,11 +1,11 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hotel/components/bottomNavbarconfig.dart';
 import 'package:hotel/components/drawerConfig.dart';
-import 'package:hotel/pages/hotelListSelect.dart';
+import 'package:hotel/pages/selectAppliance.dart';
+
 import 'package:hotel/pages/toggleAppliances.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
@@ -19,15 +19,37 @@ class _HomePageState extends State<HomePage> {
 
   var hotelName;
   var roomType;
-
-  String _selectedDate = '';
-  String _dateCount = '';
   var _range;
-  String _rangeCount = '';
+  var selectedAppliances;
 
+  var hotelID;
   var selectedDate = DateTime.now();
+  List roomTypeList = [];
+  List appliancesList = [];
 
-  List<String> roomTypeList = [];
+  getRoomList() {
+    FirebaseFirestore.instance
+        .collection("HotelInfo")
+        .doc(hotelID)
+        .get()
+        .then((value) {
+      setState(() {
+        roomTypeList = value.get("HotelRoomType");
+      });
+    });
+  }
+
+  getApplianceList() {
+    FirebaseFirestore.instance
+        .collection("HotelInfo")
+        .doc(hotelID)
+        .get()
+        .then((value) {
+      setState(() {
+        appliancesList = value.get("HotelRoomAppliance");
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,6 +90,9 @@ class _HomePageState extends State<HomePage> {
                             ),
                             ListTile(
                               title: Text("Date: $_range"),
+                            ),
+                            ListTile(
+                              title: Text("Appliances: $selectedAppliances"),
                             ),
                           ],
                         ),
@@ -121,20 +146,6 @@ class _HomePageState extends State<HomePage> {
                       ]),
                     ),
                   ),
-                  Expanded(
-                    child: Align(
-                      alignment: Alignment.bottomRight,
-                      child: Container(
-                        padding: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 0.0),
-                        child: CupertinoSearchTextField(
-                          decoration: BoxDecoration(
-                              color: Colors.white38,
-                              borderRadius: BorderRadius.circular(30.0)),
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 30.0),
                 ],
               ),
             ),
@@ -148,15 +159,41 @@ class _HomePageState extends State<HomePage> {
                   height: 150,
                   width: 150,
                   child: InkWell(
-                    onTap: () async {
-                      var result = await Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => HotelSelect()));
-
-                      setState(() {
-                        hotelName = result;
-                      });
+                    onTap: () {
+                      showCupertinoModalPopup(
+                          context: context,
+                          builder: (context) {
+                            return StreamBuilder(
+                                stream: FirebaseFirestore.instance
+                                    .collection("HotelInfo")
+                                    .snapshots(),
+                                builder: (BuildContext context,
+                                    AsyncSnapshot<QuerySnapshot> snapshot) {
+                                  if (!snapshot.hasData) {
+                                    return CircularProgressIndicator();
+                                  }
+                                  return CupertinoActionSheet(
+                                    title: Text("Select Hotel List"),
+                                    actions: snapshot.data.docs.map((e) {
+                                      return CupertinoActionSheetAction(
+                                          onPressed: () {
+                                            setState(() {
+                                              hotelName = e["HotelName"];
+                                              hotelID = e.id;
+                                            });
+                                            print(hotelID);
+                                            Navigator.pop(context);
+                                          },
+                                          child: Text(e['HotelName']));
+                                    }).toList(),
+                                    cancelButton: CupertinoButton(
+                                        child: Text("Cancel"),
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        }),
+                                  );
+                                });
+                          });
                     },
                     child: Card(
                       elevation: 10.0,
@@ -200,46 +237,73 @@ class _HomePageState extends State<HomePage> {
                 Container(
                   height: 150,
                   width: 150,
-                  child: Card(
-                    color: Colors.blue[200],
-                    elevation: 10.0,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30.0)),
-                    child: Center(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          children: [
-                            SizedBox(
-                              height: 10,
-                            ),
-                            CircleAvatar(
-                              backgroundColor: Colors.white,
-                              radius: 30.0,
-                              child: Icon(
-                                Icons.add_shopping_cart_sharp,
-                                size: 40.0,
-                                color: Colors.blue[800],
+                  child: InkWell(
+                    onTap: () {
+                      getApplianceList();
+                      print(appliancesList);
+                      showCupertinoModalPopup(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return CupertinoActionSheet(
+                                title: Text("Select Appliances"),
+                                cancelButton: CupertinoButton(
+                                    child: Text("Cancel"),
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    }),
+                                actions: appliancesList.map((e) {
+                                  return CupertinoActionSheetAction(
+                                      onPressed: () {
+                                        setState(() {
+                                          selectedAppliances = e;
+                                        });
+                                        Navigator.pop(context);
+                                      },
+                                      child: Text(e));
+                                }).toList());
+                          });
+                    },
+                    child: Card(
+                      color: Colors.blue[200],
+                      elevation: 10.0,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30.0)),
+                      child: Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            children: [
+                              SizedBox(
+                                height: 10,
                               ),
-                            ),
-                            SizedBox(
-                              height: 10.0,
-                            ),
-                            Text(
-                              "Control",
-                              style: TextStyle(
-                                  fontSize: 18.0,
+                              CircleAvatar(
+                                backgroundColor: Colors.white,
+                                radius: 30.0,
+                                child: Icon(
+                                  Icons.add_shopping_cart_sharp,
+                                  size: 40.0,
                                   color: Colors.blue[800],
-                                  fontWeight: FontWeight.bold),
-                            ),
-                            Text(
-                              "Appliances",
-                              style: TextStyle(
-                                  fontSize: 18.0,
-                                  color: Colors.blue[800],
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ],
+                                ),
+                              ),
+                              SizedBox(
+                                height: 10.0,
+                              ),
+                              Text(
+                                "Control",
+                                style: TextStyle(
+                                    fontSize: 18.0,
+                                    color: Colors.blue[800],
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              Text(
+                                "Appliances",
+                                style: TextStyle(
+                                    fontSize: 18.0,
+                                    color: Colors.blue[800],
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -258,58 +322,32 @@ class _HomePageState extends State<HomePage> {
                   width: 150,
                   child: InkWell(
                     onTap: () {
+                      getRoomList();
+
+                      print(roomTypeList);
+
                       showCupertinoModalPopup(
                           context: context,
                           builder: (BuildContext context) {
                             return CupertinoActionSheet(
-                              title: Text("Select Room Type"),
-                              message:
-                                  Text("Select room as per your convenience"),
-                              actions: [
-                                CupertinoActionSheetAction(
+                                title: Text("Room List"),
+                                message:
+                                    Text("Select Room Type of your choices"),
+                                cancelButton: CupertinoButton(
+                                    child: Text("Cancel"),
                                     onPressed: () {
-                                      setState(() {
-                                        roomType = "Single";
-                                      });
                                       Navigator.pop(context);
-                                    },
-                                    child: Text("Single")),
-                                CupertinoActionSheetAction(
-                                    onPressed: () {
-                                      setState(() {
-                                        roomType = "Double";
-                                      });
-                                      Navigator.pop(context);
-                                    },
-                                    child: Text("Double")),
-                                CupertinoActionSheetAction(
-                                    onPressed: () {
-                                      setState(() {
-                                        roomType = "Quad";
-                                      });
-                                      Navigator.pop(context);
-                                    },
-                                    child: Text("Quad")),
-                                CupertinoActionSheetAction(
-                                    onPressed: () {
-                                      setState(() {
-                                        roomType = "Suite";
-                                      });
-                                      Navigator.pop(context);
-                                    },
-                                    child: Text("Suite")),
-                              ],
-                              cancelButton: CupertinoButton(
-                                child: Text(
-                                  "Cancel",
-                                  style: TextStyle(
-                                      color: CupertinoColors.destructiveRed),
-                                ),
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                              ),
-                            );
+                                    }),
+                                actions: roomTypeList.map((e) {
+                                  return CupertinoActionSheetAction(
+                                      onPressed: () {
+                                        setState(() {
+                                          roomType = e;
+                                        });
+                                        Navigator.pop(context);
+                                      },
+                                      child: Text(e));
+                                }).toList());
                           });
                     },
                     child: Card(
@@ -381,7 +419,7 @@ class _HomePageState extends State<HomePage> {
                                   setState(() {
                                     _range = value;
                                   });
-                                  print(value);
+                                  Navigator.pop(context);
                                 },
                               ),
                             );
@@ -436,10 +474,19 @@ class _HomePageState extends State<HomePage> {
               width: MediaQuery.of(context).size.width / 1.2,
               child: InkWell(
                 onTap: () {
+                  var id = FirebaseFirestore.instance
+                      .collection('HotelTransaction')
+                      .add({
+                    'HotelName': hotelName,
+                    'RoomType': roomType,
+                    "StayDate": selectedDate,
+                    "Appliances": selectedAppliances
+                  });
                   Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) => ToggleAppliances()));
+                  print(id);
                 },
                 child: Card(
                   color: Colors.purple[200],
