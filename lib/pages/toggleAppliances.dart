@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:hotel/pages/receiptPage.dart';
 import "package:intl/intl.dart";
 
 class ToggleAppliances extends StatefulWidget {
@@ -15,49 +16,6 @@ class _ToggleAppliancesState extends State<ToggleAppliances> {
   String documentId =
       FirebaseFirestore.instance.collection("HotelTransaction").id;
   var userId;
-
-  jaishreeram() {
-    FirebaseFirestore.instance
-        .collection("HotelTransaction")
-        .doc(documentId)
-        .get()
-        .then((value) {
-      return StreamBuilder(
-          stream: FirebaseFirestore.instance
-              .collection("HotelTransaction")
-              .snapshots(),
-          builder:
-              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-            if (!snapshot.hasData) {
-              return CircularProgressIndicator();
-            }
-
-            return ListView(
-              children: snapshot.data.docs.map((e) {
-                return ListTile(
-                  trailing: CupertinoSlidingSegmentedControl(
-                      children: lightsToggle,
-                      groupValue: lightsControl,
-                      onValueChanged: (value) {
-                        if (e["Appliances"] == "Light") {
-                          setState(() {
-                            lightsControl = value;
-                          });
-                          if (lightsControl == 1) {
-                            databaseReference.update({"LED_STATUS": 1});
-                          }
-                        }
-                      }),
-                  title: Text(
-                    e["Appliances"],
-                    style: TextStyle(fontSize: 30.0),
-                  ),
-                );
-              }).toList(),
-            );
-          });
-    });
-  }
 
   @override
   void initState() {
@@ -141,7 +99,50 @@ class _ToggleAppliancesState extends State<ToggleAppliances> {
         bottomOpacity: 0.0,
         backgroundColor: Colors.purple[400],
       ),
-      body: jaishreeram(),
+      body: Column(
+        children: [
+          Expanded(
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 0, 0, 5),
+                  child: Container(
+                    height: 105.0,
+                    width: 250.0,
+                    child: Card(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(35.0)),
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            height: 5.0,
+                          ),
+                          IconButton(
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  CupertinoPageRoute(
+                                      builder: (context) => Receipt()));
+                            },
+                            icon: Icon(Icons.request_quote_outlined),
+                            iconSize: 40.0,
+                          ),
+                          SizedBox(height: 5.0),
+                          Text(
+                            "Proceed to Final Bill",
+                            style: TextStyle(fontSize: 15.0),
+                          ),
+                        ],
+                      ),
+                    ),
+                  )),
+            ),
+          ),
+          SizedBox(
+            height: 30.0,
+          ),
+        ],
+      ),
     );
   }
 }

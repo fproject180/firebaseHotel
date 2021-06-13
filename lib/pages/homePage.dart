@@ -285,40 +285,7 @@ class _HomePageState extends State<HomePage> {
                   height: 150,
                   width: 150,
                   child: InkWell(
-                    onTap: () {
-                      getApplianceList();
-                      // showModal(
-                      //     context: context,
-                      //     builder: (BuildContext context) {
-                      //       return ListView(
-                      //         children: appliancesList.map((e) {
-                      //           return CheckboxListTile(
-                      //             title: Text(e),
-                      //             onChanged: (value) {},
-                      //           );
-                      //         }).toList(),
-                      //       );
-
-                            // return StreamBuilder(
-                            //     stream: FirebaseFirestore.instance
-                            //         .collection("HotelInfo")
-                            //         .snapshots(),
-                            //     builder: (BuildContext context,
-                            //         AsyncSnapshot<QuerySnapshot> snapshot) {
-                            //       if (!snapshot.hasData) {
-                            //         return CircularProgressIndicator();
-                            //       }
-                            //       return AlertDialog(
-                            //           content: ListView(
-                            //         children: snapshot.data.docs.map((e) {
-                            //           return CheckboxListTile(
-                            //               title: Text(e["HotelRoomAppliance"]),
-                            //               onChanged: (value) {});
-                            //         }).toList(),
-                            //       ));
-                            //     });
-                          });
-                    },
+                    onTap: () {},
                     child: Card(
                       color: Colors.blue[200],
                       elevation: 10.0,
