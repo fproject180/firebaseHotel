@@ -7,6 +7,7 @@ import 'package:hotel/components/bottomNavbarconfig.dart';
 import 'package:hotel/components/drawerConfig.dart';
 import 'package:hotel/pages/toggleAppliances.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -64,10 +65,11 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  FlutterLocalNotificationsPlugin notification;
+
   @override
   void initState() {
     getUserInfo();
-
     super.initState();
   }
 
