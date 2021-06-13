@@ -43,6 +43,7 @@ dependencies:
   razorpay_flutter: ^1.2.6
   custom_rating_bar: ^1.0.2
   firebase_messaging: ^10.0.2
+  pull_to_refresh: ^2.0.0
 
 dev_dependencies:
   flutter_test:

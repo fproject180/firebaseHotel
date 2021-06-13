@@ -19,9 +19,12 @@ class _HomePageState extends State<HomePage> {
   var hotelName;
   var roomType;
   var _range;
-  var selectedAppliances;
+  List<String> selectedAppliances = [];
   var hotelID;
   String userID;
+  String transactionId;
+
+  var checkBoxValue = false;
 
   var selectedDate = DateTime.now();
   List roomTypeList = [];
@@ -102,7 +105,15 @@ class _HomePageState extends State<HomePage> {
                                 Navigator.pop(context);
                               },
                               child: Text("Cancel")),
-                          TextButton(onPressed: () {}, child: Text("Proceed"))
+                          TextButton(
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            ToggleAppliances()));
+                              },
+                              child: Text("Proceed"))
                         ],
                         content: Column(
                           children: [
@@ -285,7 +296,36 @@ class _HomePageState extends State<HomePage> {
                   height: 150,
                   width: 150,
                   child: InkWell(
-                    onTap: () {},
+                    onTap: () {
+                      getApplianceList();
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              actions: [
+                                TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: Text("Cancel")),
+                                TextButton(onPressed: () {}, child: Text("OK")),
+                              ],
+                              content: Column(
+                                  children: appliancesList.map((e) {
+                                return CheckboxListTile(
+                                    title: Text(e),
+                                    value: checkBoxValue,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        checkBoxValue = value;
+                                        selectedAppliances.add(e);
+                                        print(selectedAppliances);
+                                      });
+                                    });
+                              }).toList()),
+                            );
+                          });
+                    },
                     child: Card(
                       color: Colors.blue[200],
                       elevation: 10.0,
@@ -494,7 +534,7 @@ class _HomePageState extends State<HomePage> {
               width: MediaQuery.of(context).size.width / 1.2,
               child: InkWell(
                 onTap: () {
-                  var id = FirebaseFirestore.instance
+                  FirebaseFirestore.instance
                       .collection('HotelTransaction')
                       .add({
                     "UserID": userID,
@@ -503,12 +543,17 @@ class _HomePageState extends State<HomePage> {
                     'RoomType': roomType,
                     "StayDate": selectedDate,
                     "Appliances": selectedAppliances
+                  }).then((value) {
+                    setState(() {
+                      transactionId = value.id;
+                    });
                   });
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => ToggleAppliances()));
-                  print(id);
+                          builder: (context) =>
+                              ToggleAppliances(value: transactionId)));
+                  print(transactionId);
                 },
                 child: Card(
                   color: Colors.purple[200],

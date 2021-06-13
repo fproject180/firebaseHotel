@@ -181,3 +181,76 @@ body: StreamBuilder(
                 ),
               ));
             })
+
+
+
+            Container(
+              child: Center(
+                child: Text("Toggle appliances",
+                    style: TextStyle(
+                        fontSize: 30.0,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold)),
+              ),
+              height: 150,
+              decoration: BoxDecoration(
+                  color: Colors.purple[400],
+                  borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(50.0),
+                      bottomRight: Radius.circular(50.0))),
+            ),
+
+
+
+
+
+            _______________________________________________________________________________________
+
+
+
+
+
+
+
+
+
+
+
+
+            Expanded(
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 0, 0, 5),
+                  child: Container(
+                    height: 105.0,
+                    width: 250.0,
+                    child: Card(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(35.0)),
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            height: 5.0,
+                          ),
+                          IconButton(
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  CupertinoPageRoute(
+                                      builder: (context) => Receipt()));
+                            },
+                            icon: Icon(Icons.request_quote_outlined),
+                            iconSize: 40.0,
+                          ),
+                          SizedBox(height: 5.0),
+                          Text(
+                            "Proceed to Final Bill",
+                            style: TextStyle(fontSize: 15.0),
+                          ),
+                        ],
+                      ),
+                    ),
+                  )),
+            ),
+          ),

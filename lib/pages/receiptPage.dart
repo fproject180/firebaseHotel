@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:hotel/pages/homePage.dart';
@@ -11,11 +13,48 @@ class Receipt extends StatefulWidget {
 }
 
 class _ReceiptState extends State<Receipt> {
+  //Payment variables
   Razorpay razorpay;
   bool paymentDone;
 
+  //random calculation of days
+
+  var app1Day;
+  var app2Day;
+  var app3Day;
+  var app4Day;
+  var totalPrice;
+
+  void calculateBill() {
+    Random rnd = new Random();
+
+    var min = 1;
+    var max = 30;
+
+    var App1Day = min + rnd.nextInt(max - min);
+    var App2Day = min + rnd.nextInt(max - min);
+    var App3Day = min + rnd.nextInt(max - min);
+    var App4Day = min + rnd.nextInt(max - min);
+
+    var App1DayUsage = 50 * App1Day;
+    var App2DayUsage = 200 * App2Day;
+    var App3DayUsage = 80 * App3Day;
+    var App4DayUsage = 100 * App4Day;
+
+    var TotalPrice = App1DayUsage + App2DayUsage + App3DayUsage + App4DayUsage;
+
+    setState(() {
+      app1Day = App1Day;
+      app2Day = App2Day;
+      app3Day = App3Day;
+      app4Day = App4Day;
+      totalPrice = TotalPrice;
+    });
+  }
+
   @override
   void initState() {
+    calculateBill();
     super.initState();
     // initializes razorPay
     razorpay = new Razorpay();
@@ -32,8 +71,8 @@ class _ReceiptState extends State<Receipt> {
   void openCheckout() {
     var options = {
       "key": "rzp_test_4tJOGnreKMYNnM", // test API key
-      "amount": num.parse(
-          '1000'), //converting to number and multiplying to increase decimal value
+      "amount": num.parse('$totalPrice') *
+          100, //converting to number and multiplying to increase decimal value
       "name": "Hotel_owner_A/c",
       "description": "The Total Hotel Bill.",
       "prefill": {
@@ -96,17 +135,100 @@ class _ReceiptState extends State<Receipt> {
                       fontFamily: "homeAway"),
                 ),
                 SizedBox(
-                  height: 360.0,
+                  height: 10.0,
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 30.0),
                   child: Divider(
                     color: Colors.grey,
+                    thickness: 1.0,
+                  ),
+                ),
+                SizedBox(
+                  height: 3.0,
+                ),
+
+                ///
+                DataTable(
+                  columns: [
+                    DataColumn(
+                        label: Text('Appliance',
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold))),
+                    DataColumn(
+                        label: Text('Usage',
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold))),
+                    DataColumn(
+                        label: Text('Price',
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold))),
+                  ],
+                  rows: [
+                    DataRow(cells: [
+                      DataCell(Text('Lights 💡')),
+                      DataCell(Text('$app1Day')), // randomize
+                      DataCell(Text('₹ 50')),
+                    ]),
+                    DataRow(cells: [
+                      DataCell(Text('TV 📺')),
+                      DataCell(Text('$app2Day')), // randomize
+                      DataCell(Text('₹ 200')),
+                    ]),
+                    DataRow(cells: [
+                      DataCell(Text('Coffee-Maker ☕')),
+                      DataCell(Text('$app3Day')), // randomize
+                      DataCell(Text('₹ 80')),
+                    ]),
+                    DataRow(cells: [
+                      DataCell(Text('Fan 𒅒')),
+                      DataCell(Text('$app4Day')), // randomize
+                      DataCell(Text('₹ 100')),
+                    ]),
+                    DataRow(cells: [
+                      DataCell(Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
+                        child: Text(
+                          'Total',
+                          style: TextStyle(
+                              fontWeight: FontWeight.w900, fontSize: 20.0),
+                        ),
+                      )),
+                      DataCell(Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
+                        child: Text(
+                          " ",
+                          style: TextStyle(
+                              fontWeight: FontWeight.w900, fontSize: 20.0),
+                        ),
+                      )), // randomize
+                      DataCell(Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
+                        child: Text(
+                          "₹ " + '$totalPrice',
+                          style: TextStyle(
+                              fontWeight: FontWeight.w900, fontSize: 17.0),
+                        ),
+                      )),
+                    ]),
+                  ],
+                ),
+
+                SizedBox(
+                  height: 40.0,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                  child: Divider(
+                    color: Colors.grey,
+                    thickness: 1.0,
                   ),
                 ),
                 IconButton(
-                  onPressed: () {
+                  onPressed: () async {
                     openCheckout();
+                    Toast.show("Receipt will be Sent via Email", context,
+                        duration: Toast.LENGTH_LONG);
                   },
                   icon: Icon(Icons.point_of_sale_outlined),
                   splashColor: Colors.red,
