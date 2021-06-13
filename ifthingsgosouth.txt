@@ -181,3 +181,21 @@ body: StreamBuilder(
                 ),
               ));
             })
+
+
+
+            Container(
+              child: Center(
+                child: Text("Toggle appliances",
+                    style: TextStyle(
+                        fontSize: 30.0,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold)),
+              ),
+              height: 150,
+              decoration: BoxDecoration(
+                  color: Colors.purple[400],
+                  borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(50.0),
+                      bottomRight: Radius.circular(50.0))),
+            ),
