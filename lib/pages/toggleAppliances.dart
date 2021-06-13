@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:hotel/pages/receiptPage.dart';
 import "package:intl/intl.dart";
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
@@ -208,7 +209,45 @@ class _ToggleAppliancesState extends State<ToggleAppliances> {
                   ),
                 ],
               ),
-            )
+            ),
+            Expanded(
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),
+                    child: Container(
+                      height: 105.0,
+                      width: 200.0,
+                      child: Card(
+                        color: Colors.blue[100],
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(35.0)),
+                        child: Column(
+                          children: [
+                            SizedBox(
+                              height: 5.0,
+                            ),
+                            IconButton(
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    CupertinoPageRoute(
+                                        builder: (context) => Receipt()));
+                              },
+                              icon: Icon(Icons.request_quote_outlined),
+                              iconSize: 40.0,
+                            ),
+                            SizedBox(height: 5.0),
+                            Text(
+                              "Proceed to Final Bill",
+                              style: TextStyle(fontSize: 15.0),
+                            ),
+                          ],
+                        ),
+                      ),
+                    )),
+              ),
+            ),
           ],
         ));
   }
