@@ -26,6 +26,8 @@ class _ToggleAppliancesState extends State<ToggleAppliances> {
   var userId;
   var docId;
 
+  var time = DateTime.now();
+
   @override
   void initState() {
     //getApplianceList();
@@ -143,6 +145,10 @@ class _ToggleAppliancesState extends State<ToggleAppliances> {
                           databaseReference.update({"LED_STATUS": 0});
                         } else if (lightsControl == 1) {
                           databaseReference.update({"LED_STATUS": 1});
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text("$time"),
+                            behavior: SnackBarBehavior.floating,
+                          ));
                         }
                       },
                     ),
@@ -162,6 +168,10 @@ class _ToggleAppliancesState extends State<ToggleAppliances> {
                         if (fanControl == 0) {
                           databaseReference.update({"FAN_STATUS": 0});
                         } else if (fanControl == 1) {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text("$time"),
+                            behavior: SnackBarBehavior.floating,
+                          ));
                           databaseReference.update({"FAN_STATUS": 1});
                         }
                       },
@@ -183,6 +193,10 @@ class _ToggleAppliancesState extends State<ToggleAppliances> {
                           databaseReference.update({"AC_STATUS": 0});
                         } else if (acControl == 1) {
                           databaseReference.update({"AC_STATUS": 1});
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text("$time"),
+                            behavior: SnackBarBehavior.floating,
+                          ));
                         }
                       },
                     ),
@@ -203,6 +217,10 @@ class _ToggleAppliancesState extends State<ToggleAppliances> {
                           databaseReference.update({"COFFEE_STATUS": 0});
                         } else if (coffeeMakerControl == 1) {
                           databaseReference.update({"COFFEE_STATUS": 1});
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text("$time"),
+                            behavior: SnackBarBehavior.floating,
+                          ));
                         }
                       },
                     ),

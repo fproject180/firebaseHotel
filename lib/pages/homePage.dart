@@ -109,13 +109,9 @@ class _HomePageState extends State<HomePage> {
                               child: Text("Cancel")),
                           TextButton(
                               onPressed: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            ToggleAppliances()));
+                                Navigator.pop(context);
                               },
-                              child: Text("Proceed"))
+                              child: Text("Ok"))
                         ],
                         content: Column(
                           children: [
