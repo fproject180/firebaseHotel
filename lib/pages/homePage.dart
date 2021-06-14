@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:hotel/components/bottomNavbarconfig.dart';
 import 'package:hotel/components/drawerConfig.dart';
 import 'package:hotel/pages/toggleAppliances.dart';
+import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
@@ -19,11 +20,16 @@ class _HomePageState extends State<HomePage> {
 
   var hotelName;
   var roomType;
-  var _range;
+
   List<String> selectedAppliances = [];
   var hotelID;
   String userID;
   String transactionId;
+
+  String _selectedDate = '';
+  String _dateCount = '';
+  String _range = '';
+  String _rangeCount = '';
 
   var checkBoxValue = false;
 
@@ -62,6 +68,37 @@ class _HomePageState extends State<HomePage> {
       setState(() {
         appliancesList = value.get("HotelRoomAppliance");
       });
+    });
+  }
+
+  void _onSelectionChanged(DateRangePickerSelectionChangedArgs args) {
+    /// The argument value will return the changed date as [DateTime] when the
+    /// widget [SfDateRangeSelectionMode] set as single.
+    ///
+    /// The argument value will return the changed dates as [List<DateTime>]
+    /// when the widget [SfDateRangeSelectionMode] set as multiple.
+    ///
+    /// The argument value will return the changed range as [PickerDateRange]
+    /// when the widget [SfDateRangeSelectionMode] set as range.
+    ///
+    /// The argument value will return the changed ranges as
+    /// [List<PickerDateRange] when the widget [SfDateRangeSelectionMode] set as
+    /// multi range.
+    setState(() {
+      if (args.value is PickerDateRange) {
+        _range =
+            DateFormat('dd/MM/yyyy').format(args.value.startDate).toString() +
+                ' - ' +
+                DateFormat('dd/MM/yyyy')
+                    .format(args.value.endDate ?? args.value.startDate)
+                    .toString();
+      } else if (args.value is DateTime) {
+        _selectedDate = args.value.toString();
+      } else if (args.value is List<DateTime>) {
+        _dateCount = args.value.length.toString();
+      } else {
+        _rangeCount = args.value.length.toString();
+      }
     });
   }
 
@@ -129,6 +166,14 @@ class _HomePageState extends State<HomePage> {
                             ListTile(
                               title: Text(
                                 "Room Type: $roomType",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15.0),
+                              ),
+                            ),
+                            ListTile(
+                              title: Text(
+                                "Date: $_selectedDate",
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 15.0),
@@ -474,11 +519,9 @@ class _HomePageState extends State<HomePage> {
                                   Navigator.pop(context);
                                 },
                                 onSubmit: (value) {
-                                  setState(() {
-                                    _range = value;
-                                  });
                                   Navigator.pop(context);
                                 },
+                                onSelectionChanged: _onSelectionChanged,
                               ),
                             );
                           });
